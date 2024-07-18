@@ -1,5 +1,8 @@
 package main.ArraysAndStrings;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SlidingWindow {
     /*
      * Given an array of positive integers nums and an integer k,
@@ -142,4 +145,33 @@ public class SlidingWindow {
         return -1;
     }
 
+    /*
+     * You are given a string s and an integer k. Find the length of the longest substring that contains at most k distinct characters.
+     * For example, 
+     * Input: s = "eceba", k = 2
+     * Output: 3 -> The longest substring with at most 2 distinct characters is "ece".
+     * NOTE: This problem was found in the "Hashing-Counting" section, however is also a candidate for Sliding Window
+    */
+    public static int findLongestSubstring(String s, int k) {
+        Map<Character, Integer> freq = new HashMap<>();
+        int ans = 0;
+
+        int l = 0;
+        for (int r = 0; r < s.length(); r++) {
+            freq.put(s.charAt(r), freq.getOrDefault(s.charAt(r), 0) + 1);
+
+            while (freq.size() > k) {
+                if (freq.get(s.charAt(l)) == 1) {
+                    freq.remove(s.charAt(l));
+                } else {
+                    freq.put(s.charAt(l), freq.get(s.charAt(l)) - 1);
+                }
+                l++;
+            }
+
+            ans = Math.max(ans, (r - l) + 1);
+        }
+
+        return ans;
+    }
 }

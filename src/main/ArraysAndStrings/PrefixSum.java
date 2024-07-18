@@ -102,8 +102,13 @@ public class PrefixSum {
      * Explanation: The altitudes are [0,-5,-4,1,1,-6]. The highest is 1.
     */
     public static int largestAltitude(int[] gain) {
-        // TODO
-        return -1;
+        int ans = 0;
+        int curr = 0;
+        for (int n : gain) {
+            curr += n;
+            ans = Math.max(ans, curr);
+        }
+        return ans;
     }
 
     /*

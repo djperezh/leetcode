@@ -29,7 +29,23 @@ public class TwoPointers {
     */
     public List<Integer> combine(int[] arr1, int[] arr2) {
         List<Integer> ans = new ArrayList<>();
-        // TODO
+        int x = 0;
+        int y = 0;
+        
+        while (x < arr1.length && y < arr2.length) {
+            if (arr1[x] == arr2[y]) {
+                ans.add(x++);
+                ans.add(y++);
+            } else {
+                if (arr1[x] > arr2[y]) {
+                    ans.add(y++);
+                } else {
+                    ans.add(x++);
+                }
+            }
+        }
+        while (x < arr1.length) ans.add(arr1[x++]);
+        while (y < arr1.length) ans.add(arr2[y++]);
         return ans;
     }
 
@@ -58,8 +74,13 @@ public class TwoPointers {
      * (i.e., "ace" is a subsequence of "abcde" while "aec" is not).
     */
     public static boolean isSubsequence(String s, String t) {
-        // TODO
-
+        if (s.length() > t.length()) return false;
+        if (s.length() == 0) return true;
+        int j = 0;
+        for (int i = 0; i < t.length(); i++) {
+            if (t.charAt(i) == s.charAt(j)) j++;
+            if (j == s.length()) return true;
+        }
         return false;
     }
 
@@ -190,7 +211,7 @@ public class TwoPointers {
      * Explanation: The first occurrence of "d" is at index 3. Reverse the part of word from 0 to 3 (inclusive), the resulting string is "dcbaefd".
     */
     public static String reversePrefix(String word, char ch) {
-        //TODO
+        // TODO
         return null;
     }
 }
