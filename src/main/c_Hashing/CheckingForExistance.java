@@ -4,23 +4,25 @@ import java.util.*;
 
 public class CheckingForExistance {
     /*
-     * 1. Two Sum (https://leetcode.com/problems/two-sum/description/)
+     * Example 1.
+     * Two Sum (https://leetcode.com/problems/two-sum/description/)
      * Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
      * You may assume that each input would have exactly one solution, and you may not use the same element twice.
      * You can return the answer in any order.
      * NOTE: we are assuming that no dupes elements are allowed (otherwise, use a map where the value is a Set containin the list of indexes)
     */
     public static int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> elementIndexMap = new HashMap<>();
+        Map<Integer, Integer> dic = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
             int complement = target - nums[i];
-            if (elementIndexMap.containsKey(complement) && elementIndexMap.get(complement) != i) return new int[] {i, elementIndexMap.get(complement)};
-            elementIndexMap.put(nums[i], i);
+            if (dic.containsKey(complement) && dic.get(complement) != i) return new int[] {i, dic.get(complement)};
+            dic.put(nums[i], i);
         }
         return new int[] { -1, -1};
     }
 
     /*
+     * Example 2.
      * 2351. First Letter to Appear Twice (https://leetcode.com/problems/first-letter-to-appear-twice/)
      * Given a string s consisting of lowercase English letters, return the first letter to appear twice.
      * Note: A letter a appears twice before another letter b if the second occurrence of a is before the second occurrence of b.
@@ -36,12 +38,15 @@ public class CheckingForExistance {
     }
 
     /*
-     * Given an integer array nums, find all the unique numbers x in nums that satisfy the following: 
+     * Example 3.
+     * Given an integer array nums, 
+     * find all the unique numbers x in nums that satisfy the following: 
      * x + 1 is not in nums, and x - 1 is not in nums.
     */
     public static List<Integer> findNumbers(int[] nums) {
         Set<Integer> s = new HashSet<>();
-        for (int n : nums) s.add(n);
+        
+        for (int n : nums) s.add(n); // uniques
 
         List<Integer> ans = new ArrayList<>();
         for (int n : nums) {
@@ -51,14 +56,17 @@ public class CheckingForExistance {
     }
 
     /*
-     * 1832. Check if the Sentence Is Pangram (https://leetcode.com/problems/check-if-the-sentence-is-pangram/description/)
+     * 1832. Check if the Sentence Is a Perfect Pangram (https://leetcode.com/problems/check-if-the-sentence-is-pangram/description/)
      * Given a string sentence containing only lowercase English letters, return true if sentence is a pangram, or false otherwise.
      * A pangram is a sentence where every letter of the English alphabet appears at least once.
+     * i.e. (from https://www.yourdictionary.com/articles/examples-pangrams):
+     * The five boxing wizards jump quickly
+     * The quick brown fox jumps over a lazy dog
     */
     public static boolean checkIfPangram(String sentence) {
         Set<Character> s = new HashSet<>();
-        for (int i = 'a'; i <= 'z'; i++) s.add((char)i);
-        for (char c : sentence.toCharArray()) s.remove(c);
+        for (int i = 'a'; i <= 'z'; i++) s.add((char)i); // English alphabet's chars
+        for (char c : sentence.toCharArray()) s.remove(Character.toLowerCase(c));
         return s.size() == 0;
     }
 
@@ -70,11 +78,8 @@ public class CheckingForExistance {
     public static int missingNumber(int[] nums) {
         int actual = 0;
         for (int num : nums) actual += num;
-        
-        int n = nums.length;
-        long sum = (n * (n + 1)) / 2;
-        
-        return (int)(sum - actual);
+        long summation = (nums.length * (nums.length + 1)) / 2;
+        return (int)(summation - actual);
     }
 
     /*
