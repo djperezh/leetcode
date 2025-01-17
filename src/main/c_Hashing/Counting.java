@@ -224,4 +224,179 @@ public class Counting {
         
         return result;
     }
+
+    /*
+     * 1748. Sum of Unique Elements (https://leetcode.com/problems/sum-of-unique-elements/description/)
+     * You are given an integer array nums. 
+     * The unique elements of an array are the elements that appear exactly once in the array.
+     * Return the sum of all the unique elements of nums.
+    */
+    public static int sumOfUnique(int[] nums) {
+        int ans = 0;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int n : nums) {
+            int times = freq.getOrDefault(n, 0) + 1;
+            freq.put(n, times);
+            if (times == 1) ans += n;
+            if (times == 2) ans -= n;
+        }
+        return ans;
+    }
+
+    /*
+     * 3005. Count Elements With Maximum Frequency (https://leetcode.com/problems/count-elements-with-maximum-frequency/description/)
+     * You are given an array nums consisting of positive integers.
+     * Return the total frequencies of elements in nums such that those elements all have the maximum frequency.
+     * The frequency of an element is the number of occurrences of that element in the array.
+    */
+    public static int maxFrequencyElements(int[] nums) {
+        int maxFreq = 0;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int n : nums) {
+            int currFreq = freq.getOrDefault(n, 0) + 1;
+            freq.put(n, currFreq);
+            maxFreq = Math.max(maxFreq, currFreq);
+        }
+
+        int ans = 0;
+        for (int key : freq.keySet()) {
+            if (freq.get(key) == maxFreq) ans += maxFreq;
+        }
+        return ans;
+    }
+
+    /*
+     * 1394. Find Lucky Integer in an Array (https://leetcode.com/problems/find-lucky-integer-in-an-array/description/)
+     * Given an array of integers arr, a lucky integer is an integer that has a frequency in the array equal to its value.
+     * Return the largest lucky integer in the array. If there is no lucky integer return -1.
+    */
+    public static int findLucky(int[] arr) {
+        int ans = -1;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int n : arr) {
+            int times = freq.getOrDefault(n, 0) + 1;
+            freq.put(n, times);
+        }
+        
+        for (int key : freq.keySet()) {
+            if (freq.get(key) == key) ans = Math.max(ans, key);
+        }
+        return ans;
+    }
+
+    /*
+     * 1207. Unique Number of Occurrences (https://leetcode.com/problems/unique-number-of-occurrences/description/)
+     * Given an array of integers arr, 
+     * return true if the number of occurrences of each value in the array is unique 
+     * or false otherwise.
+    */
+    public static boolean uniqueOccurrences(int[] arr) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int n : arr) {
+            int times = freq.getOrDefault(n, 0) + 1;
+            freq.put(n, times);
+        }
+
+        Set<Integer> uniques = new HashSet<>();
+        for (int v : freq.values()) uniques.add(v);
+
+        return freq.values().size() == uniques.size();
+    }
+
+    /*
+     * 451. Sort Characters By Frequency (https://leetcode.com/problems/sort-characters-by-frequency/description/)
+     * Given a string s, sort it in decreasing order based on the frequency of the characters. 
+     * The frequency of a character is the number of times it appears in the string.
+     * Return the sorted string. If there are multiple answers, return any of them.
+    */
+    public String frequencySort(String s) {
+        int[] freq = new int[128]; // support lowercase, uppercase, digits
+        for (char c : s.toCharArray()) freq[c]++;
+        
+        Map<Integer, List<Character>> charFreqMap = new HashMap<>();
+        int maxFreq = 0;
+        for (int asciiValue = freq.length - 1; asciiValue >=0; asciiValue--) {
+            int times = freq[asciiValue];
+            if (times == 0) continue;
+            
+            if (!charFreqMap.containsKey(times)) charFreqMap.put(times, new ArrayList<>());
+            charFreqMap.get(times).add((char)asciiValue);
+
+            maxFreq = Math.max(maxFreq, times);
+        }
+        
+        StringBuilder str = new StringBuilder();
+        for (int times = maxFreq; times > 0; times--) {
+            if (charFreqMap.containsKey(times)) {
+                for (char c : charFreqMap.get(times)) str.append((Character.toString(c)).repeat(times));
+            }
+        }
+
+        return str.toString();
+    }
+
+    /*
+     * 2958. Length of Longest Subarray With at Most K Frequency (https://leetcode.com/problems/length-of-longest-subarray-with-at-most-k-frequency/description/)
+     * You are given an integer array nums and an integer k.
+     * The frequency of an element x is the number of times it occurs in an array.
+     * An array is called good if the frequency of each element in this array is less than or equal to k.
+     * Return the length of the longest good subarray of nums.
+     * A subarray is a contiguous non-empty sequence of elements within an array.
+    */
+    public static int maxSubarrayLength(int[] nums, int k) {
+        // freq table
+        Map<Integer, Integer> freq = new HashMap<>();
+        
+        int result = 0;
+        // sliding window (using K in condition)
+        int leftIdx = 0;
+        for (int j = 0; j < nums.length; j++) {
+            int n = nums[j];
+            freq.put(n, freq.getOrDefault(n, 0) + 1);
+
+            // condition
+            while (freq.get(n) > k) {
+                // update result
+                result = Math.max(result, j - leftIdx);
+                // slide window (by increasing left pointer)
+                freq.put(nums[leftIdx], freq.get(nums[leftIdx]) - 1);
+                leftIdx++;
+            }
+        }
+
+        return  Math.max(result, nums.length - leftIdx);
+    }
+
+    /*
+     * 1512. Number of Good Pairs (https://leetcode.com/problems/number-of-good-pairs/description/)
+     * Given an array of integers nums, return the number of good pairs.
+     * A pair (i, j) is called good if nums[i] == nums[j] and i < j.
+    */
+    public static int numIdenticalPairs(int[] nums) {
+        int ans = 0;
+        
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int n : nums) freq.put(n, freq.getOrDefault(n, 0) + 1); 
+        
+        for (int k : freq.keySet()) {
+            int times = freq.get(k);
+            if (times > 1) ans += getPairsCount(times);
+        }
+        
+        return ans;
+    }
+
+    private static int getPairsCount(int freq) {
+        if (freq == 2) return 1;
+        int x = freq - 1;
+        return (x * (x + 1)) / 2; // summation
+    }
+
+    /*
+     * 930. Binary Subarrays With Sum (https://leetcode.com/problems/binary-subarrays-with-sum/description/)
+     * Given a binary array nums and an integer goal, 
+     * return the number of non-empty subarrays with a sum goal.
+     * A subarray is a contiguous part of the array.
+    */
+
 }

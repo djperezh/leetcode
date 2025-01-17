@@ -93,4 +93,59 @@ public class CheckingForExistance {
         for (int n : arr) ans += (s.contains(n + 1)) ? 1 : 0;
         return ans;
     }
+
+    /*
+     * 217. Contains Duplicate (https://leetcode.com/problems/contains-duplicate/description/)
+     * Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
+    */
+    public static boolean containsDuplicate(int[] nums) {
+        Set<Integer> s = new HashSet<>();
+        for (int n : nums) s.add(n);
+        return nums.length != s.size();
+    }
+
+    /*
+     * 1436. Destination City (https://leetcode.com/problems/destination-city/description/)
+     * You are given the array paths, where paths[i] = [cityAi, cityBi] means there exists a direct path going from cityAi to cityBi.
+     * Return the destination city, that is, the city without any path outgoing to another city.
+     * It is guaranteed that the graph of paths forms a line without any loop, therefore, there will be exactly one destination city.
+    */
+    public static String destCity(List<List<String>> paths) {
+        Set<String> origins = new HashSet<>();
+        for (List<String> pairCities: paths) origins.add(pairCities.get(0));
+        for (List<String> pairCities: paths) {
+            String destination = pairCities.get(1);
+            if (!origins.contains(destination)) return destination;
+        }
+        return "";
+    }
+
+    /*
+     * 1496. Path Crossing (https://leetcode.com/problems/path-crossing/description/)
+     * Given a string path, where path[i] = 'N', 'S', 'E' or 'W', 
+     * each representing moving one unit north, south, east, or west, respectively. 
+     * You start at the origin (0, 0) on a 2D plane and walk on the path specified by path.
+     * Return true if the path crosses itself at any point, that is, if at any time you are on a location you have previously visited. 
+     * Return false otherwise.
+    */
+    public static boolean isPathCrossing(String path) {
+        Map<Integer, HashSet<Integer>> coor = new HashMap<>();
+        coor.put(0, new HashSet<>());
+        coor.get(0).add(0);
+        int[] curr = new int[] {0,0};
+        for (char c : path.toCharArray()) {
+            int[] candidate = curr;
+            if (c == 'N') candidate[1] = curr[1] + 1;
+            if (c == 'S') candidate[1] = curr[1] - 1;
+            if (c == 'E') candidate[0] = curr[0] + 1;
+            if (c == 'W') candidate[0] = curr[0] - 1;
+            
+            if (coor.containsKey(candidate[0]) && coor.get(candidate[0]).contains(candidate[1])) return true;
+            
+            if (!coor.containsKey(candidate[0])) coor.put(candidate[0], new HashSet<>());
+            coor.get(candidate[0]).add(candidate[1]);
+            curr = candidate;
+        }
+        return false;
+    }
 }
