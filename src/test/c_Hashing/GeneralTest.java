@@ -15,27 +15,27 @@ public class GeneralTest {
             new int[] {1, 1, 1, 0, 0, 0},
             new int[] {0, 0, 0, 0, 1, 0},
             new int[] {1, 1, 1, 0, 0, 0},
-            new int[] {1, 0, 1, 0, 0, 1},
-            new int[] {0, 0, 0, 0, 1, 1}
+            new int[] {1, 0, 2, 0, 0, 1},
+            new int[] {0, 0, 0, 0, 1, 2}
         };
 
         int ans = General.getCandidateFieldsCount(matrix);
 
-        assertEquals(4, ans);
+        assertEquals(1, ans);
     }
 
     @Test
     public void getCandidateFieldsCountTest_irregularFieldShape() {
         int[][] matrix = new int[][] {
-            new int[] {1, 1, 1, 0, 1 },
+            new int[] {1, 1, 2, 0, 1 },
             new int[] {1, 1, 1},
-            new int[] {0, 0, 0, 0, 1},
+            new int[] {0, 0, 0, 0, 2},
             new int[] {1, 1, 1, 0, 0, 0},
-            new int[] {1, 0, 1, 0, 1},
+            new int[] {1, 0, 2, 0, 1},
             new int[] {0, 0, 0, 0, 1, 1}
         };
         int ans = General.getCandidateFieldsCount(matrix);
 
-        assertEquals(5, ans);
+        assertEquals(2, ans);
     }
 }

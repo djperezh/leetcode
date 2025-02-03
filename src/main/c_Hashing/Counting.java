@@ -1,5 +1,6 @@
 package main.c_Hashing;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -328,10 +329,11 @@ public class Counting {
         StringBuilder str = new StringBuilder();
         for (int times = maxFreq; times > 0; times--) {
             if (charFreqMap.containsKey(times)) {
-                for (char c : charFreqMap.get(times)) str.append((Character.toString(c)).repeat(times));
+                for (char c : charFreqMap.get(times)) str.append(new String(new char[times]).replace("\0", (Character.toString(c))));
+               // (Character.toString(c)).repeat(times)
             }
         }
-
+ 
         return str.toString();
     }
 
@@ -398,5 +400,72 @@ public class Counting {
      * return the number of non-empty subarrays with a sum goal.
      * A subarray is a contiguous part of the array.
     */
+    public static int numSubarraysWithSum(int[] nums, int goal) {
+        return subarraysSlidingWindow(nums, goal) - subarraysSlidingWindow(nums, goal - 1);
+    }
 
+    // Explanation here: https://www.youtube.com/watch?v=_uA-1qRQ6kc&t=1164s
+    private static int subarraysSlidingWindow(int[] nums, int goal) {
+        int ans = 0;
+        int l = 0;
+        int curr = 0;
+        for (int r = 0; r < nums.length; r++) {
+            curr += nums[r];
+            while (curr > goal && l <= r) curr -= nums[l++];
+            ans += r - l + 1; // number of subarrays
+        }
+        return ans;
+    }
+
+    /*
+     * 1695. Maximum Erasure Value (https://leetcode.com/problems/maximum-erasure-value/description/)
+     * You are given an array of positive integers nums and want to erase a subarray containing unique elements. The score you get by erasing the subarray is equal to the sum of its elements.
+     * Return the maximum score you can get by erasing exactly one subarray.
+     * An array b is called to be a subarray of a if it forms a contiguous subsequence of a,
+     * that is, if it is equal to a[l],a[l+1],...,a[r] for some (l,r).
+    */
+    public static int maximumUniqueSubarray(int[] nums) {
+        int ans = 0;
+        Map<Integer, Integer> freq = new HashMap<>();
+        int curr = 0;
+        int l = 0;
+        for (int r = 0; r < nums.length; r++) {
+            int n = nums[r];
+            curr += n;
+            freq.put(n, freq.getOrDefault(n, 0) + 1);
+
+            while (freq.get(n) > 1) {
+                int left = nums[l];
+                if (freq.getOrDefault(left, 0) > 0) freq.put(left, freq.get(left) - 1);
+                curr -= left;
+                l++;
+            }
+            ans = Math.max(ans, curr);
+        }
+
+        return Math.max(ans, curr);
+    }
+
+    /*
+     * 567. Permutation in String (https://leetcode.com/problems/permutation-in-string/description/)
+     * Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+     * In other words, return true if one of s1's permutations is the substring of s2.
+    */
+    public static boolean checkInclusion(String s1, String s2) {
+        Map<Character, Integer> freq = new HashMap<>();
+        for (Character c: s1.toCharArray()) freq.put(c, freq.getOrDefault(c, 0) + 1);
+        boolean found = false;
+
+        for (Character c: s2.toCharArray()) {
+            if (freq.containsKey(c)) {
+                freq.put(c, freq.get(c) - 1);
+                found = true;
+            } else {
+                if (found) break;
+            }
+        }
+        
+        for (int v: freq.values()) if (v != 0) return false;
+        return true;
+    }
 }
