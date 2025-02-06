@@ -2,9 +2,6 @@ package main.c_Hashing;
 
 import java.util.*;
 
-
-
-
 public class General {
 
     /*
@@ -84,7 +81,7 @@ public class General {
                 }
             }
         }
-
+        
         for (char c : s.toCharArray()) {
             if (freq.get(c) != 0) sb.append(c);
         }
@@ -93,7 +90,7 @@ public class General {
     }
 
     /*
-     * 1657. Determine if Two Strings Are Close
+     * 1657. Determine if Two Strings Are Close (https://leetcode.com/problems/determine-if-two-strings-are-close/description/)
      * Two strings are considered close if you can attain one from the other using the following operations:
      * Operation 1: Swap any two existing characters. For example, abcde -> aecdb
      * Operation 2: Transform every occurrence of one existing character into another existing character, and do the same with the other character.
@@ -102,8 +99,30 @@ public class General {
      * Given two strings, word1 and word2, return true if word1 and word2 are close, and false otherwise.
     */
     public static boolean closeStrings(String word1, String word2) {
-        // TODO
-        return false;
+        Map<Character, Integer> freq1 = new HashMap<>();
+        for (Character c : word1.toCharArray()) freq1.put(c, freq1.getOrDefault(c , 0) + 1);
+        Map<Character, Integer> freq2 = new HashMap<>();
+        for (Character c : word2.toCharArray()) freq2.put(c, freq2.getOrDefault(c , 0) + 1);
+
+        if (freq1.size() != freq2.size()) return false;
+
+        Map<Integer, Integer> freqCounter2 = new HashMap<>();
+        for (Character c : freq2.keySet()) {
+            if (!freq1.containsKey(c)) return false;
+
+            int counter = freq2.get(c);
+            freqCounter2.put(counter, freqCounter2.getOrDefault(counter, 0) + 1);
+        }
+
+        for (Character c : freq1.keySet()) {
+            int counter = freq1.get(c);
+            if (!freqCounter2.containsKey(counter)) return false;
+
+            freqCounter2.put(counter, freqCounter2.getOrDefault(counter, 0) - 1);
+            if (freqCounter2.get(counter) == 0) freqCounter2.remove(counter);
+        }
+
+        return freqCounter2.size() == 0;
     }
 
     /*

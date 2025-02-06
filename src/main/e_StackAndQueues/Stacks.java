@@ -96,6 +96,17 @@ public class Stacks {
     }
 
     /*
+     * 844. Backspace String Compare (https://leetcode.com/problems/backspace-string-compare/description/)
+     * Given two strings s and t, return true if they are equal when both are typed into empty text editors. 
+     * '#' means a backspace character.
+     * Note that after backspacing an empty text, the text will continue empty.
+    */
+    public static boolean backspaceCompare(String s, String t) {
+        // TODO
+        return false;
+    }
+
+    /*
      * 1544. Make The String Great (https://leetcode.com/problems/make-the-string-great/description/)
      * Given a string s of lower and upper case English letters.
      * A good string is a string which doesn't have two adjacent characters s[i] and s[i + 1] where: 
@@ -107,7 +118,54 @@ public class Stacks {
      * Notice that an empty string is also good.
     */
     public static String makeGood(String s) {
-        // TODO
-        return null;
+        Stack<Character> myStack = new Stack<>();
+        
+        for (Character c: s.toCharArray()) {
+            if (myStack.size() == 0) {
+                myStack.push(c);
+            } else {
+                Character curr = myStack.peek();
+                if ((curr ==  Character.toLowerCase(curr) && Character.toUpperCase(curr) == c) || 
+                    (curr ==  Character.toUpperCase(curr) && Character.toLowerCase(curr) == c)){
+                    myStack.pop();
+                } else {
+                    myStack.push(c);
+                }
+            }
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        while (myStack.size() > 0) sb.insert(0,myStack.pop());
+        return sb.toString();
+    }
+
+    /*
+     * 946. Validate Stack Sequences (https://leetcode.com/problems/validate-stack-sequences/description/)
+     * Given two integer arrays pushed and popped each with distinct values, 
+     * return true if this could have been the result of a sequence of push and pop operations
+     * on an initially empty stack, or false otherwise.
+    */
+    public static boolean validateStackSequences(int[] pushed, int[] popped) {
+        Stack<Integer> s = new Stack<>();
+
+        int poppedIndex = 0;
+        for (int pushedIndex = 0; pushedIndex < pushed.length; pushedIndex++) {
+            int val = pushed[pushedIndex];
+            s.push(val);
+
+            if (val == popped[poppedIndex]) {
+                while (!s.isEmpty() && s.peek() == popped[poppedIndex]) {
+                    s.pop();
+                    poppedIndex++;
+                }
+            }
+        }
+
+        for (int i = poppedIndex; i < popped.length; i++) {
+            if (s.isEmpty() || popped[i] != s.peek()) return false;
+            s.pop();
+        }
+
+        return s.isEmpty();
     }
 }

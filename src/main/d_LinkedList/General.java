@@ -45,8 +45,29 @@ public class General {
      * You must solve the problem in O(1) extra space complexity and O(n) time complexity.
     */
     public static LinkedListNode oddEvenList(LinkedListNode head) {
-        // TODO
-        return null;
+        if (head == null || head.next == null) return head;
+
+        // save ref to head
+        LinkedListNode h = head;
+        // Save reference to the end of the odd elements
+        LinkedListNode endOdd = head;
+        // Save reference to the ini & end of the even elements
+        LinkedListNode iniEven = head.next;
+        LinkedListNode endEven = head.next;
+
+        while (endEven != null && endEven.next != null) {
+            // Update end of Odd elements by skipping the Even element 
+            endOdd.next = endEven.next;
+            // Update end of even elements by skipping the Odd element and update the variable
+            endEven.next = endEven.next.next; 
+            endEven = endEven.next;
+            // Update end of Odd elements and update the variable
+            endOdd = endOdd.next;
+            // update the end of Odd elements so it keeps poiting to the ini of the Even elements
+            endOdd.next = iniEven;
+        }
+
+        return h;
     }
 
     /*
