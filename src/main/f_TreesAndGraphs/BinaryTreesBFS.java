@@ -4,6 +4,7 @@ import java.util.*;
 
 public class BinaryTreesBFS {
     /*
+     * Example 1
      * 199. Binary Tree Right Side View (https://leetcode.com/problems/binary-tree-right-side-view/description/)
      * Given the root of a binary tree, imagine yourself standing on the right side of it,
      * return the values of the nodes you can see ordered from top to bottom.
@@ -28,6 +29,7 @@ public class BinaryTreesBFS {
     }
 
     /*
+     * Example 2
      * 515. Find Largest Value in Each Tree Row (https://leetcode.com/problems/find-largest-value-in-each-tree-row/description/)
      * Given the root of a binary tree, return an array of the largest value in each row of the tree (0-indexed).
     */
@@ -98,6 +100,7 @@ public class BinaryTreesBFS {
                 if (n.left != null) q.add(n.left);
                 if (n.right != null) q.add(n.right);
 
+                // Add the value to the beggining OR last of the list based on the flag
                 if (directionFlag) {
                     levelNodeValues.add(n.val);
                 } else {
@@ -109,4 +112,6 @@ public class BinaryTreesBFS {
         }
         return ans;
     }
+
+
 }

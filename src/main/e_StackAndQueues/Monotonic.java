@@ -1,5 +1,6 @@
 package main.e_StackAndQueues;
 
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -14,8 +15,13 @@ public class Monotonic {
      * If there is no future day for which this is possible, keep answer[i] == 0 instead.
     */
     public static int[] dailyTemperatures(int[] temperatures) {
-        // TODO
-        return null;
+        Stack<Integer> indexes = new Stack<>();
+        int[] ans = new int[temperatures.length];
+        for (int i = 0; i < temperatures.length; i++) {
+            while (indexes.size() > 0 && temperatures[i] > temperatures[indexes.peek()]) ans[indexes.peek()] = i - indexes.pop();
+            indexes.push(i);
+        }
+        return ans;
     }
 
     /*
@@ -47,32 +53,37 @@ public class Monotonic {
      * return the size of the longest non-empty subarray such that the absolute difference between any two elements of this subarray is less than or equal to limit.
     */
     public static int longestSubarray(int[] nums, int limit) {
-        // TODO
-        return -1;
-    }
-
-    /*
-     * 496. Next Greater Element I (https://leetcode.com/problems/next-greater-element-i/description/)
-     * The next greater element of some element x in an array is the first greater element that is to the right of x in the same array.
-     * You are given two distinct 0-indexed integer arrays nums1 and nums2, where nums1 is a subset of nums2.
-     * For each 0 <= i < nums1.length, find the index j such that nums1[i] == nums2[j] and determine the next greater element of nums2[j] in nums2. If there is no next greater element, then the answer for this query is -1.
-     * Return an array ans of length nums1.length such that ans[i] is the next greater element as described above.
-    */
-    public static int[] nextGreaterElement(int[] nums1, int[] nums2) {
-        Map<Integer, Integer> m = new HashMap<>();
-        Stack<Integer> myStack = new Stack<>();
-
-        for (int i = 0; i < nums2.length; i++) {
-            int n = nums2[i];
-            while (myStack.size() > 0 && myStack.peek() < n)  m.put(myStack.pop(), n);
-            myStack.push(n);
+        LinkedList<Integer> increasing = new LinkedList<>();
+        LinkedList<Integer> decreasing = new LinkedList<>();
+        int left = 0;
+        int ans = 0;
+        
+        for (int right = 0; right < nums.length; right++) {
+            // maintain the monotonic deques
+            while (!increasing.isEmpty() && increasing.getLast() > nums[right]) {
+                increasing.removeLast();
+            }
+            while (!decreasing.isEmpty() && decreasing.getLast() < nums[right]) {
+                decreasing.removeLast();
+            }
+            
+            increasing.addLast(nums[right]);
+            decreasing.addLast(nums[right]);
+            
+            // maintain window property
+            while (decreasing.getFirst() - increasing.getFirst() > limit) {
+                if (nums[left] == decreasing.getFirst()) {
+                    decreasing.removeFirst();
+                }
+                if (nums[left] == increasing.getFirst()) {
+                    increasing.removeFirst();
+                }
+                left++;
+            }
+            
+            ans = Math.max(ans, right - left + 1);
         }
-
-        while (myStack.size() > 0) m.put(myStack.pop(), -1);
-
-        int[] result = new int[nums1.length];
-        for (int i = 0; i < nums1.length; i++) result[i] = m.get(nums1[i]);
-
-        return result;
+        
+        return ans;
     }
 }

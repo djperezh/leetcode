@@ -1,7 +1,10 @@
 package main.f_TreesAndGraphs;
 
+import java.util.Stack;
+
 public class BinarySearchTrees {
     /*
+     * Example 1
      * 938. Range Sum of BST (https://leetcode.com/problems/range-sum-of-bst/description/)
      * Given the root node of a binary search tree and two integers low and high, 
      * return the sum of values of all nodes with a value in the inclusive range [low, high].
@@ -20,6 +23,29 @@ public class BinarySearchTrees {
     }
 
     /*
+     * Example 1
+     * 938. Range Sum of BST (https://leetcode.com/problems/range-sum-of-bst/description/)
+     * Given the root node of a binary search tree and two integers low and high, 
+     * return the sum of values of all nodes with a value in the inclusive range [low, high].
+    */
+    public static int rangeSumBSTIterative(BinaryTreeNode root, int low, int high) {
+        if (root == null) return 0;
+        int ans = 0;
+
+        Stack<BinaryTreeNode> s = new Stack<>();
+        s.push(root);
+        while (!s.isEmpty()) {
+            BinaryTreeNode node = s.pop();
+            if (node.val >= low && node.val <= high) ans += node.val;
+            // Add children in case the current node has NOT meet the limit/range
+            if (node.left != null && node.val > low) s.push(node.left);
+            if (node.right != null && node.val < high) s.push(node.right);
+        }
+        return ans;
+    }
+
+    /*
+     * Example 2
      * 530. Minimum Absolute Difference in BST (https://leetcode.com/problems/minimum-absolute-difference-in-bst/)
      * Given the root of a Binary Search Tree (BST), 
      * return the minimum absolute difference between the values of any two different nodes in the tree.
@@ -45,7 +71,8 @@ public class BinarySearchTrees {
     }
 
     /*
-     * Given the root of a binary tree, determine if it is a valid binary search tree (BST).
+     * Example 3
+     * Given the root of a binary tree, determine if it is a valid binary search tree (BST). (https://leetcode.com/problems/validate-binary-search-tree/)
      * A valid BST is defined as follows:
      *    The left subtree of a node contains only nodes with keys less than the node's key.
      *    The right subtree of a node contains only nodes with keys greater than the node's key.
