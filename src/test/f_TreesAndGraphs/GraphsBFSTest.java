@@ -1,5 +1,6 @@
 package test.f_TreesAndGraphs;
 
-public class GraphsTest {
+public class GraphsBFSTest {
     
+
 }
